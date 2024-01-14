@@ -3,11 +3,8 @@ const jwt = require("jsonwebtoken");
 const { User } = require("../model/User");
 const { validationResult } = require("express-validator");
 const nodemailer = require('nodemailer');
-const ejs = require('ejs');
 
 var Mailgen = require('mailgen');
-
-
 
 exports.register = async (req, res) => {
   const error = validationResult(req);

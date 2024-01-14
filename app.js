@@ -1,9 +1,9 @@
 const express = require("express");
 const mongoose = require("mongoose");
+const UserRoutes = require("./routes/user");
 const app = express();
 
 app.use(express.json());
-
 
 main().catch((err) => console.log(err));
 
@@ -12,10 +12,7 @@ async function main() {
   console.log("Database connected...");
 }
 
-
-app.get("/user", (req,res) => {
-	res.send({ message: "hello World" })
-});
+app.use("/user", UserRoutes);
 
 app.listen(8080, () => {
 	console.log("Server is running on port 8080.");
