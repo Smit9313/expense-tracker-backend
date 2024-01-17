@@ -13,7 +13,7 @@ router.post("/login",
 		,
 		body("password").trim()
 			.notEmpty().withMessage("password is required!!!")
-		// .isLength({ min: 5 }).withMessage("Invalid password length!!!")
+		    .isLength({ min: 5 }).withMessage("Invalid password length!!!")
 	],
 	asyncRouteHandler(authController.login))
 
