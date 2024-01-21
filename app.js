@@ -1,7 +1,9 @@
 const express = require("express");
 const mongoose = require("mongoose");
 const UserRoutes = require("./routes/user");
+const ExpenseRoutes = require("./routes/expense");
 const cors = require('cors');
+const { requireSignIn } = require('./middleware/authMiddleware');
 const app = express();
 
 app.use(cors());
@@ -15,6 +17,18 @@ async function main() {
 }
 
 app.use("/user", UserRoutes);
+app.use("/expense", requireSignIn, ExpenseRoutes)
+
+// error handler
+app.use(function (err, req, res, next) {
+  const status = err.statusCode || 400
+  const message = err.message
+  const data = err.data
+  res.status(status).json({
+    message,
+    data
+  })
+})
 
 app.listen(8080, () => {
 	console.log("Server is running on port 8080.");
