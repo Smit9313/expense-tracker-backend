@@ -37,8 +37,8 @@ exports.deleteExpenseCategory = async (req, res) => {
       return res.status(404).json({ error: 'Expense category not found' });
     }
 
-	// Remove the expense category
 	await ExpenseCategory.deleteOne({ _id: expenseCategoryId });
 
 	res.status(204).json({message: 'deleted successfully'});
 }
+	

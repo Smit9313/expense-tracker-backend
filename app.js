@@ -1,7 +1,8 @@
 const express = require("express");
 const mongoose = require("mongoose");
-const UserRoutes = require("./routes/user");
-const ExpenseRoutes = require("./routes/expense");
+const userRoutes = require("./routes/user");
+const expenseCategoryRoutes = require("./routes/expenseCategory");
+const incomeCategoryRoutes = require("./routes/incomeCategory");
 const cors = require('cors');
 const { requireSignIn } = require('./middleware/authMiddleware');
 const app = express();
@@ -16,8 +17,9 @@ async function main() {
   console.log("Database connected...");
 }
 
-app.use("/user", UserRoutes);
-app.use("/expense", requireSignIn, ExpenseRoutes)
+app.use("/user", userRoutes);
+app.use("/expense", requireSignIn, expenseCategoryRoutes)
+app.use("/income", requireSignIn, incomeCategoryRoutes)
 
 // error handler
 app.use(function (err, req, res, next) {

@@ -1,5 +1,5 @@
 const express = require("express");
-const { createExpenseCategory, getExpenseCategory, editExpenseCategoryHandler, deleteExpenseCategory } = require('../controller/expense');
+const { createExpenseCategory, getExpenseCategory, editExpenseCategoryHandler, deleteExpenseCategory } = require('../controller/expenseCategory');
 const asyncRouteHandler = require('../helper/asyncRouteHandler')
 
 const router = express.Router();
