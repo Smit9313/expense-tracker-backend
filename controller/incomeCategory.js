@@ -17,7 +17,7 @@ exports.getIncomeCategory = async (req, res) => {
 	res.status(200).json(categories);
 }
 
-exports.editIncomeCategoryHandler = async (req, res) => {
+exports.editIncomeCategory = async (req, res) => {
 	const { incomeCategoryId, name } = req.body;
 
 	const existingIncomeCategory = await IncomeCategory.findById(incomeCategoryId);

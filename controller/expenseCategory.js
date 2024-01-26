@@ -18,7 +18,7 @@ exports.getExpenseCategory = async (req, res) => {
 	res.status(200).json(categories);
 }
 
-exports.editExpenseCategoryHandler = async (req, res) => {
+exports.editExpenseCategory = async (req, res) => {
 	const { expenseCategoryId, name } = req.body;
 
 	const existingExpenseCategory = await ExpenseCategory.findById(expenseCategoryId);

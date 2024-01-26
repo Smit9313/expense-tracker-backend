@@ -1,12 +1,12 @@
 const express = require("express");
-const { createExpenseCategory, getExpenseCategory, editExpenseCategoryHandler, deleteExpenseCategory } = require('../controller/expenseCategory');
+const { createExpenseCategory, getExpenseCategory, editExpenseCategory, deleteExpenseCategory } = require('../controller/expenseCategory');
 const asyncRouteHandler = require('../helper/asyncRouteHandler')
 
 const router = express.Router();
 
-router.get("/expenseCategory", asyncRouteHandler(getExpenseCategory))
-router.post('/expenseCategory', asyncRouteHandler(createExpenseCategory))
-router.patch('/expenseCategory', asyncRouteHandler(editExpenseCategoryHandler))
-router.delete('/expenseCategory', asyncRouteHandler(deleteExpenseCategory))
+router.get("/getExpenseCategory", asyncRouteHandler(getExpenseCategory))
+router.post('/createExpenseCategory', asyncRouteHandler(createExpenseCategory))
+router.patch('/editExpenseCategory', asyncRouteHandler(editExpenseCategory))
+router.delete('/deleteExpenseCategory', asyncRouteHandler(deleteExpenseCategory))
 
 module.exports = router;

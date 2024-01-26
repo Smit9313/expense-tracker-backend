@@ -3,6 +3,7 @@ const mongoose = require("mongoose");
 const userRoutes = require("./routes/user");
 const expenseCategoryRoutes = require("./routes/expenseCategory");
 const incomeCategoryRoutes = require("./routes/incomeCategory");
+const expenses = require("./routes/expenses")
 const cors = require('cors');
 const { requireSignIn } = require('./middleware/authMiddleware');
 const app = express();
@@ -18,8 +19,9 @@ async function main() {
 }
 
 app.use("/user", userRoutes);
-app.use("/expense", requireSignIn, expenseCategoryRoutes)
-app.use("/income", requireSignIn, incomeCategoryRoutes)
+app.use("/expenseCategory", requireSignIn, expenseCategoryRoutes)
+app.use("/incomeCategory", requireSignIn, incomeCategoryRoutes)
+app.use("/expense", requireSignIn, expenses)
 
 // error handler
 app.use(function (err, req, res, next) {
