@@ -4,6 +4,7 @@ const userRoutes = require("./routes/user");
 const expenseCategoryRoutes = require("./routes/expenseCategory");
 const incomeCategoryRoutes = require("./routes/incomeCategory");
 const expenses = require("./routes/expenses")
+const incomes = require("./routes/incomes")
 const cors = require('cors');
 const { requireSignIn } = require('./middleware/authMiddleware');
 const app = express();
@@ -22,6 +23,7 @@ app.use("/user", userRoutes);
 app.use("/expenseCategory", requireSignIn, expenseCategoryRoutes)
 app.use("/incomeCategory", requireSignIn, incomeCategoryRoutes)
 app.use("/expense", requireSignIn, expenses)
+app.use("/income", requireSignIn, incomes)
 
 // error handler
 app.use(function (err, req, res, next) {
