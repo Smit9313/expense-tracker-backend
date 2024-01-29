@@ -45,7 +45,7 @@ exports.login = async (req, res) => {
     const user = await User.findOne({ email });
 
     if (!user) {
-      return res.status(404).json({ message: "User not found." });
+      return res.status(400).json({ message: "User not found.", djk: 'djkjk' });
     }
     //compare passwords using compare method of Bcrypt module and check for equality with stored hash value from db
     const passwordMatch = await bcrypt.compare(password, user.password);
@@ -62,7 +62,7 @@ exports.login = async (req, res) => {
     res.json({ token });
   } catch (error) {
     console.log(error);
-    res.status(500).json({ message: "Server error." });
+    res.status(401).json({ message: "Server error." });
   }
 };
 

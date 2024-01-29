@@ -5,6 +5,8 @@ const { User } = require("../model/User")
 exports.createIncome = async (req, res) => {
 	const { incomeCategoryId, incomeDetails, incomeAmount, incomeDate } = req.body;
 	const userId = req.user.id;
+	debugger
+	
 
 	const existingUser = await User.findById(userId);
 	const existingCategory = await IncomeCategory.findById(incomeCategoryId);
@@ -25,10 +27,16 @@ exports.createIncome = async (req, res) => {
 
 exports.getIncomes = async (req, res) => {
 	const userId = req.user.id
+	const incomeId = req.body.incomeId;
 
-	const existingUser = await User.findById(userId);
-	if (!existingUser) {
-		return res.status(404).json({ error: 'User not found' });
+	if (incomeId) {
+		const income = await Incomes.findOne({ _id: incomeId });
+
+		if (!income) {
+			return res.status(404).json({ error: 'Income not found for the given incomeId' });
+		}
+
+		return res.status(200).json(income);
 	}
 
 	const incomes = await Incomes.find({ userId }).populate('incomeCategoryId', 'name');

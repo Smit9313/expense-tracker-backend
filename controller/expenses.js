@@ -25,10 +25,17 @@ exports.createExpense = async (req, res) => {
 
 exports.getExpenses = async (req, res) => {
 	const userId = req.user.id
+	const expenseId = req.body.expenseId;
 
-	const existingUser = await User.findById(userId);
-	if (!existingUser) {
-		return res.status(404).json({ error: 'User not found' });
+
+	if (expenseId) {
+		const expense = await Expenses.findOne({ _id: expenseId });
+
+		if (!expense) {
+			return res.status(404).json({ error: 'Expense not found for the given expenseId' });
+		}
+
+		return res.status(200).json(expense);
 	}
 
 	const expenses = await Expenses.find({ userId }).populate('expenseCategoryId', 'name');
@@ -40,6 +47,7 @@ exports.getExpenses = async (req, res) => {
 exports.editExpense = async (req, res) => {
 	const { expenseId, expenseCategoryId, expenseDetails, expenseAmount, expenseDate } = req.body;
 
+	
 	const existingExpense = await Expenses.findById(expenseId);
 	if (!existingExpense) {
 		return res.status(404).json({ error: 'Expense not found' });

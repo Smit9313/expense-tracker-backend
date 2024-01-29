@@ -12,6 +12,18 @@ exports.createExpenseCategory = async (req, res) => {
 
 exports.getExpenseCategory = async (req, res) => {
 	const userId = req.user.id;
+	const expenseCategoryId = req.body.expenseCategoryId;
+
+	// If expenseCategoryId is provided, query only for that record
+	if (expenseCategoryId) {
+		const expense = await ExpenseCategory.findOne({ _id: expenseCategoryId });
+
+		if (!expense) {
+			return res.status(404).json({ error: 'Expense not found for the given expenseCategoryId' });
+		}
+
+		return res.status(200).json(expense);
+	}
 
 	// Retrieve all expense categories for the user
 	const categories = await ExpenseCategory.find({ userId });
@@ -32,13 +44,14 @@ exports.editExpenseCategory = async (req, res) => {
 exports.deleteExpenseCategory = async (req, res) => {
 	const { expenseCategoryId } = req.body;
 
+	console.log(expenseCategoryId)
+
 	const existingExpenseCategory = await ExpenseCategory.findById(expenseCategoryId);
-    if (!existingExpenseCategory) {
-      return res.status(404).json({ error: 'Expense category not found' });
-    }
+	if (!existingExpenseCategory) {
+		return res.status(404).json({ error: 'Expense category not found' });
+	}
 
 	await ExpenseCategory.deleteOne({ _id: expenseCategoryId });
 
-	res.status(204).json({message: 'deleted successfully'});
+	res.status(204).json({ message: 'deleted successfully' });
 }
-	

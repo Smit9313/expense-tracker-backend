@@ -12,6 +12,19 @@ exports.createIncomeCategory = async (req, res) => {
 
 exports.getIncomeCategory = async (req, res) => {
 	const userId = req.user.id;
+	const incomeCategoryId = req.body.incomeCategoryId;
+
+	// If incomeCategoryId is provided, query only for that record
+	if (incomeCategoryId) {
+		const income = await IncomeCategory.findOne({ _id: incomeCategoryId });
+
+		if (!income) {
+			return res.status(404).json({ error: 'Expense not found for the given expenseCategoryId' });
+		}
+
+		return res.status(200).json(income);
+	}
+
 
 	const categories = await IncomeCategory.find({ userId });
 	res.status(200).json(categories);
