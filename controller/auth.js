@@ -11,26 +11,27 @@ exports.register = async (req, res) => {
   if (!error.isEmpty()) {
     throw error.array();
   }
-  try {
-    const { username, email, password } = req.body;
-    const existingUser = await User.findOne({ email });
 
-    if (existingUser) {
-      return res.status(400).json({ message: "Email already exists" });
-    }
+  const { username, email, password } = req.body;
+  const existingUser = await User.findOne({ email });
 
-    //hashing the password before saving it in database
-    const hashedPassword = await bcrypt.hash(password, 10);
-
-    // Create a new user
-    const newUser = new User({ username, email, password: hashedPassword });
-    await newUser.save();
-
-    res.status(201).json({ message: "User registered successfully" });
-  } catch (error) {
-    console.log(error);
-    res.status(500).json({ message: "Server error" });
+  if (existingUser) {
+    // return res.status(400).json({ message: "Email already exists" });
+    // throw new Error("Email already exists")
+    const error = new Error("Email already exists");
+    error.statusCode = 400;
+    error.data = { key: 'value' }; // Add your additional data here
+    throw error;
   }
+
+  //hashing the password before saving it in database
+  const hashedPassword = await bcrypt.hash(password, 10);
+
+  // Create a new user
+  const newUser = new User({ username, email, password: hashedPassword });
+  await newUser.save();
+
+  res.status(201).json({ message: "User registered successfully" });
 };
 
 exports.login = async (req, res) => {
