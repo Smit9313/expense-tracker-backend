@@ -1,4 +1,5 @@
 const express = require("express");
+
 const { createIncomeCategory, getIncomeCategory, editIncomeCategory, deleteIncomeCategory } = require('../controller/incomeCategory');
 const asyncRouteHandler = require('../helper/asyncRouteHandler')
 
