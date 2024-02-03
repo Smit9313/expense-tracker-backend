@@ -1,12 +1,16 @@
 const express = require("express");
 const mongoose = require("mongoose");
+const cors = require('cors');
+
+const { requireSignIn } = require('./middleware/authMiddleware');
+const { PORT } = require('./helper/config');
+// routes
 const userRoutes = require("./routes/user");
 const expenseCategoryRoutes = require("./routes/expenseCategory");
 const incomeCategoryRoutes = require("./routes/incomeCategory");
 const expenses = require("./routes/expenses")
 const incomes = require("./routes/incomes")
-const cors = require('cors');
-const { requireSignIn } = require('./middleware/authMiddleware');
+
 const app = express();
 
 app.use(cors());
@@ -25,7 +29,7 @@ app.use("/incomeCategory", requireSignIn, incomeCategoryRoutes)
 app.use("/expense", requireSignIn, expenses)
 app.use("/income", requireSignIn, incomes)
 
-// error handler
+
 app.use(function (err, req, res, next) {
   const status = err.statusCode || 400
   const message = err.message
@@ -36,6 +40,6 @@ app.use(function (err, req, res, next) {
   })
 })  
 
-app.listen(8080, () => {
-	console.log("Server is running on port 8080.");
+app.listen(PORT, () => {
+	console.log(`Server is running on port ${PORT}.`);
 });
