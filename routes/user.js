@@ -6,31 +6,9 @@ const asyncRouteHandler = require("../helper/asyncRouteHandler");
 const router = express.Router();
 
 router.post("/login",
-	[
-		body("email").trim()
-			.notEmpty().withMessage("email is required!!!")
-			.isEmail().withMessage("Invalid Email!!!")
-		,
-		body("password").trim()
-			.notEmpty().withMessage("password is required!!!")
-		    .isLength({ min: 5 }).withMessage("Invalid password length!!!")
-	],
 	asyncRouteHandler(authController.login))
 
 router.post("/register",
-	[
-		body("username").trim()
-			.notEmpty().withMessage("username is required!!!")
-			.isLength({ min: 5 }).withMessage("min length is 5")
-		,
-		body("email").trim()
-			.notEmpty().withMessage("email is required!!!")
-			.isEmail().withMessage("Invalid Email!!!")
-		,
-		body("password").trim()
-			.notEmpty().withMessage("password is required!!!")
-			.isLength({ min: 5 }).withMessage("Invalid password length!!!")
-	],
 	asyncRouteHandler(authController.register));
 
 router.post("/forgetpassword",

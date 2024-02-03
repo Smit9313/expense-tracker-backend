@@ -5,23 +5,14 @@ const { validationResult } = require("express-validator");
 const nodemailer = require('nodemailer');
 
 var Mailgen = require('mailgen');
+const createApiResponse = require('../helper/createApiResponse');
 
 exports.register = async (req, res) => {
-  const error = validationResult(req);
-  if (!error.isEmpty()) {
-    throw error.array();
-  }
-
   const { username, email, password } = req.body;
   const existingUser = await User.findOne({ email });
 
   if (existingUser) {
-    // return res.status(400).json({ message: "Email already exists" });
-    // throw new Error("Email already exists")
-    const error = new Error("Email already exists");
-    error.statusCode = 400;
-    error.data = { key: 'value' }; // Add your additional data here
-    throw error;
+    return res.json(createApiResponse(false, null, "Email already exists", 400))
   }
 
   //hashing the password before saving it in database
@@ -31,22 +22,18 @@ exports.register = async (req, res) => {
   const newUser = new User({ username, email, password: hashedPassword });
   await newUser.save();
 
-  res.status(201).json({ message: "User registered successfully" });
+  res.status(201).json(createApiResponse(true, newUser, "User registered successfully", 200));
 };
 
 exports.login = async (req, res) => {
-  const error = validationResult(req);
-  if (!error.isEmpty()) {
-    throw error.array();
-  }
-  try {
     const { email, password } = req.body;
 
     // Find the user by username
-    const user = await User.findOne({ email });
+    const user = await User.findOne({ email });i
 
     if (!user) {
-      return res.status(400).json({ message: "User not found.", djk: 'djkjk' });
+      // return res.status(400).json({ message: "User not found.", djk: 'djkjk' });
+      return res.json(createApiResponse(false, null, "User not found.", 400))
     }
     //compare passwords using compare method of Bcrypt module and check for equality with stored hash value from db
     const passwordMatch = await bcrypt.compare(password, user.password);
@@ -61,10 +48,6 @@ exports.login = async (req, res) => {
     });
 
     res.json({ token });
-  } catch (error) {
-    console.log(error);
-    res.status(401).json({ message: "Server error." });
-  }
 };
 
 exports.sendMail = async (req, res) => {
