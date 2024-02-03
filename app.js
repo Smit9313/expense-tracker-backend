@@ -3,7 +3,7 @@ const mongoose = require("mongoose");
 const cors = require('cors');
 
 const { requireSignIn } = require('./middleware/authMiddleware');
-const { PORT } = require('./helper/config');
+const { PORT, MONGO_URL } = require('./helper/config');
 // routes
 const userRoutes = require("./routes/user");
 const expenseCategoryRoutes = require("./routes/expenseCategory");
@@ -19,7 +19,7 @@ app.use(express.json());
 main().catch((err) => console.log(err));
 
 async function main() {
-  await mongoose.connect("mongodb+srv://SmitDudhat:u0JrW6Xpi0dqIoYr@cluster0.60mptun.mongodb.net/expense_tracker");
+  await mongoose.connect(MONGO_URL);
   console.log("Database connected...");
 }
 
