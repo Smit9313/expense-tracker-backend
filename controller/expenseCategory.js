@@ -1,5 +1,6 @@
 const createApiResponse = require('../helper/createApiResponse');
 const { ExpenseCategory } = require("../model/ExpenseCategory");
+const { Expenses } = require('../model/Expenses');
 
 exports.createExpenseCategory = async (req, res) => {
 	const name = req.body.name;
@@ -49,12 +50,19 @@ exports.editExpenseCategory = async (req, res) => {
 }
 
 exports.deleteExpenseCategory = async (req, res) => {
+	const userId = req.user.id;
 	const { expenseCategoryId } = req.body;
 
 	const existingExpenseCategory = await ExpenseCategory.findById(expenseCategoryId);
 
 	if (!existingExpenseCategory) {
 		return res.json(createApiResponse(false, null, "Expense category not found.", 400))
+	}
+
+	const existingExpense = await Expenses.find({userId, expenseCategoryId})
+
+	if(existingExpense && existingExpense.length > 0){
+		return res.json(createApiResponse(false, null, 'Cannot delete. Associated expense exist.', 400));
 	}
 
 	await ExpenseCategory.deleteOne({ _id: expenseCategoryId });

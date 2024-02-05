@@ -1,5 +1,6 @@
 const createApiResponse = require('../helper/createApiResponse');
-const { IncomeCategory } = require("../model/IncomeCategory")
+const { IncomeCategory } = require("../model/IncomeCategory");
+const { Incomes } = require('../model/Incomes');
 
 exports.createIncomeCategory = async (req, res) => {
 	const name = req.body.name;
@@ -49,12 +50,19 @@ exports.editIncomeCategory = async (req, res) => {
 }
 
 exports.deleteIncomeCategory = async (req, res) => {
+	const userId = req.user.id;
 	const { incomeCategoryId } = req.body;
 
 	const existingIncomeCategory = await IncomeCategory.findById(incomeCategoryId);
 
 	if (!existingIncomeCategory) {
 		return res.json(createApiResponse(false, null, "Income category not found.", 400))
+	}
+
+	const existingIncome = await Incomes.find({ userId, incomeCategoryId })
+
+	if (existingIncome && existingIncome.length > 0) {
+		return res.json(createApiResponse(false, null, 'Cannot delete. Associated income exist.', 400))
 	}
 
 	await IncomeCategory.deleteOne({ _id: incomeCategoryId });
