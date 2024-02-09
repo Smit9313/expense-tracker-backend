@@ -1,6 +1,7 @@
 const { Expenses } = require("../model/Expenses")
 const { ExpenseCategory } = require("../model/ExpenseCategory")
-const { User } = require("../model/User")
+const { User } = require("../model/User");
+const createApiResponse = require('../helper/createApiResponse');
 
 exports.createExpense = async (req, res) => {
 	const { expenseCategoryId, expenseDetails, expenseAmount, expenseDate } = req.body;
@@ -40,8 +41,7 @@ exports.getExpenses = async (req, res) => {
 
 	const expenses = await Expenses.find({ userId }).populate('expenseCategoryId', 'name');
 
-	res.status(200).json(expenses);
-
+	res.status(200).json(createApiResponse(true, expenses, "", 200))
 };
 
 exports.editExpense = async (req, res) => {
@@ -60,7 +60,7 @@ exports.editExpense = async (req, res) => {
 
 	await existingExpense.save();
 
-	res.status(200).json(existingExpense);
+	res.status(200).json(createApiResponse(true, existingExpense, "edited...", 200))
 };
 
 exports.deleteExpense = async (req, res) => {
@@ -73,5 +73,6 @@ exports.deleteExpense = async (req, res) => {
   
 	  await Expenses.deleteOne({ _id: expenseId });
   
-	  res.status(204).end();
+	//   res.status(204).end();
+	  res.status(200).json(createApiResponse(true, [], "deleted...", 200))
   };
