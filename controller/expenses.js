@@ -10,7 +10,7 @@ exports.createExpense = async (req, res) => {
 	const existingUser = await User.findById(userId);
 	const existingCategory = await ExpenseCategory.findById(expenseCategoryId);
 	if (!existingUser || !existingCategory) {
-		return res.status(404).json({ error: 'User or Expense Category not found' });
+		return res.json(createApiResponse(false, [], "User or Expense Category not found", 400))
 	}
 
 	const newExpense = await Expenses.create({
@@ -21,7 +21,7 @@ exports.createExpense = async (req, res) => {
 		expenseDate,
 	});
 
-	res.status(201).json(newExpense);
+	res.json(createApiResponse(true, newExpense, "created...", 201))
 };
 
 exports.getExpenses = async (req, res) => {
@@ -33,10 +33,10 @@ exports.getExpenses = async (req, res) => {
 		const expense = await Expenses.findOne({ _id: expenseId });
 
 		if (!expense) {
-			return res.status(404).json({ error: 'Expense not found for the given expenseId' });
+			return res.json(createApiResponse(false, [], "Expense not found for the given expenseId", 400))
 		}
 
-		return res.status(200).json(expense);
+		return res.json(createApiResponse(true, expense, "", 200))
 	}
 
 	const expenses = await Expenses.find({ userId }).populate('expenseCategoryId', 'name');
@@ -47,10 +47,10 @@ exports.getExpenses = async (req, res) => {
 exports.editExpense = async (req, res) => {
 	const { expenseId, expenseCategoryId, expenseDetails, expenseAmount, expenseDate } = req.body;
 
-	
+
 	const existingExpense = await Expenses.findById(expenseId);
 	if (!existingExpense) {
-		return res.status(404).json({ error: 'Expense not found' });
+		return res.json(createApiResponse(false, [], "Expense not found", 400))
 	}
 
 	existingExpense.expenseCategoryId = expenseCategoryId;
@@ -64,15 +64,14 @@ exports.editExpense = async (req, res) => {
 };
 
 exports.deleteExpense = async (req, res) => {
-	  const { expenseId } = req.body;
-  
-	  const existingExpense = await Expenses.findById(expenseId);
-	  if (!existingExpense) {
-		return res.status(404).json({ error: 'Expense not found' });
-	  }
-  
-	  await Expenses.deleteOne({ _id: expenseId });
-  
-	//   res.status(204).end();
-	  res.status(200).json(createApiResponse(true, [], "deleted...", 200))
-  };
+	const { expenseId } = req.body;
+
+	const existingExpense = await Expenses.findById(expenseId);
+	if (!existingExpense) {
+		return res.json(createApiResponse(false, [], "Expense not found", 400))
+	}
+
+	await Expenses.deleteOne({ _id: expenseId });
+
+	res.json(createApiResponse(true, [], "deleted...", 200))
+};

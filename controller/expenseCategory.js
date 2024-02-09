@@ -46,7 +46,7 @@ exports.editExpenseCategory = async (req, res) => {
 	existingExpenseCategory.name = name;
 	await existingExpenseCategory.save();
 
-	res.status(200).json(createApiResponse(true, existingExpenseCategory, "", 200))
+	res.status(200).json(createApiResponse(true, existingExpenseCategory, "edited...", 200))
 }
 
 exports.deleteExpenseCategory = async (req, res) => {
@@ -67,5 +67,5 @@ exports.deleteExpenseCategory = async (req, res) => {
 
 	await ExpenseCategory.deleteOne({ _id: expenseCategoryId });
 
-	res.status(204).json(createApiResponse(true, null, "deleted successfully", 204))
+	res.json(createApiResponse(true, null, "deleted successfully", 204))
 }

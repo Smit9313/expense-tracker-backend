@@ -1,17 +1,18 @@
 const { Incomes } = require("../model/Incomes")
 const { IncomeCategory } = require("../model/IncomeCategory")
-const { User } = require("../model/User")
+const { User } = require("../model/User");
+const createApiResponse = require('../helper/createApiResponse');
 
 exports.createIncome = async (req, res) => {
 	const { incomeCategoryId, incomeDetails, incomeAmount, incomeDate } = req.body;
 	const userId = req.user.id;
 	debugger
-	
+
 
 	const existingUser = await User.findById(userId);
 	const existingCategory = await IncomeCategory.findById(incomeCategoryId);
 	if (!existingUser || !existingCategory) {
-		return res.status(404).json({ error: 'User or Income Category not found' });
+		return res.json(createApiResponse(false, [], "User or Income Category not found", 400))
 	}
 
 	const newIncome = await Incomes.create({
@@ -22,7 +23,7 @@ exports.createIncome = async (req, res) => {
 		incomeDate,
 	});
 
-	res.status(201).json(newIncome);
+	res.json(createApiResponse(true, newIncome, "created...", 201))
 };
 
 exports.getIncomes = async (req, res) => {
@@ -33,16 +34,15 @@ exports.getIncomes = async (req, res) => {
 		const income = await Incomes.findOne({ _id: incomeId });
 
 		if (!income) {
-			return res.status(404).json({ error: 'Income not found for the given incomeId' });
+			return res.json(createApiResponse(false, [], "Income not found for the given incomeId", 201))
 		}
 
-		return res.status(200).json(income);
+		return res.json(createApiResponse(true, income, "", 200))
 	}
 
 	const incomes = await Incomes.find({ userId }).populate('incomeCategoryId', 'name');
 
-	res.status(200).json(incomes);
-
+	res.status(200).json(createApiResponse(true, incomes, "", 200))
 };
 
 exports.editIncome = async (req, res) => {
@@ -50,7 +50,7 @@ exports.editIncome = async (req, res) => {
 
 	const existingIncome = await Incomes.findById(incomeId);
 	if (!existingIncome) {
-		return res.status(404).json({ error: 'Income not found' });
+		return res.json(createApiResponse(false, [], "Income not found", 400))
 	}
 
 	existingIncome.incomeCategoryId = incomeCategoryId;
@@ -60,18 +60,18 @@ exports.editIncome = async (req, res) => {
 
 	await existingIncome.save();
 
-	res.status(200).json(existingIncome);
+	res.status(200).json(createApiResponse(true, existingIncome, "edited...", 200))
 };
 
 exports.deleteIncome = async (req, res) => {
-	  const { incomeId } = req.body;
-  
-	  const existingIncome = await Incomes.findById(incomeId);
-	  if (!existingIncome) {
-		return res.status(404).json({ error: 'Income not found' });
-	  }
-  
-	  await Incomes.deleteOne({ _id: incomeId });
-  
-	  res.status(204).end();
-  };
+	const { incomeId } = req.body;
+
+	const existingIncome = await Incomes.findById(incomeId);
+	if (!existingIncome) {
+		return res.json(createApiResponse(false, [], "Income not found", 400))
+	}
+
+	await Incomes.deleteOne({ _id: incomeId });
+
+	res.json(createApiResponse(true, [], "deleted...", 200))
+};
