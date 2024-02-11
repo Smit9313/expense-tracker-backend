@@ -6,8 +6,6 @@ const createApiResponse = require('../helper/createApiResponse');
 exports.createIncome = async (req, res) => {
 	const { incomeCategoryId, incomeDetails, incomeAmount, incomeDate } = req.body;
 	const userId = req.user.id;
-	debugger
-
 
 	const existingUser = await User.findById(userId);
 	const existingCategory = await IncomeCategory.findById(incomeCategoryId);
