@@ -38,7 +38,7 @@ exports.editExpenseCategory = async (req, res) => {
 	const { expenseCategoryId, name } = req.body;
 
 	const existingExpenseCategory = await ExpenseCategory.findById(expenseCategoryId);
-
+console.log(existingExpenseCategory)
 	if (!existingExpenseCategory) {
 		return res.json(createApiResponse(false, null, "Expense category not found.", 400))
 	}
