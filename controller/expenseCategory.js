@@ -50,7 +50,7 @@ exports.editExpenseCategory = async (req, res) => {
 
 	  return res.status(200).json(createApiResponse(true, existingExpenseCategory, "edited...", 200))
 	}
-	res.status(200).json(createApiResponse(false,null,"Expense Category name was unchanged",400))
+	res.status(400).json(createApiResponse(false,null,"Expense Category name was unchanged",400))
 
 }
 
