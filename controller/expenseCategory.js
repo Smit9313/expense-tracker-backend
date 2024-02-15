@@ -2,7 +2,7 @@ const createApiResponse = require('../helper/createApiResponse');
 const { ExpenseCategory } = require("../model/ExpenseCategory");
 const { Expenses } = require('../model/Expenses');
 
-exports.createExpenseCategory = async (req, res) => {
+exports.	createExpenseCategory = async (req, res) => {
 	const name = req.body.name;
 	const userId = req.user.id;
 
@@ -38,15 +38,20 @@ exports.editExpenseCategory = async (req, res) => {
 	const { expenseCategoryId, name } = req.body;
 
 	const existingExpenseCategory = await ExpenseCategory.findById(expenseCategoryId);
-console.log(existingExpenseCategory)
+   
 	if (!existingExpenseCategory) {
 		return res.json(createApiResponse(false, null, "Expense category not found.", 400))
 	}
 
-	existingExpenseCategory.name = name;
-	await existingExpenseCategory.save();
+	const checkExistingName = await ExpenseCategory.findOne({name})
+    if(!checkExistingName){	
+	  existingExpenseCategory.name = name;
+	  await existingExpenseCategory.save();
 
-	res.status(200).json(createApiResponse(true, existingExpenseCategory, "edited...", 200))
+	  return res.status(200).json(createApiResponse(true, existingExpenseCategory, "edited...", 200))
+	}
+	res.status(200).json(createApiResponse(false,null,"Expense Category name was unchanged",400))
+
 }
 
 exports.deleteExpenseCategory = async (req, res) => {
