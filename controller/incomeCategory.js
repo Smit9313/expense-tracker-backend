@@ -43,10 +43,15 @@ exports.editIncomeCategory = async (req, res) => {
 		return res.json(createApiResponse(false, null, "Income category not found.", 400))
 	}
 
-	existingIncomeCategory.name = name;
-	await existingIncomeCategory.save();
 
-	res.status(200).json(createApiResponse(true, existingIncomeCategory, "edited...", 200))
+	const checkexistingIncomeCategory = await IncomeCategory.findOne({name})
+    if(!checkexistingIncomeCategory){	
+		existingIncomeCategory.name = name;
+		await existingIncomeCategory.save();
+
+		return res.status(200).json(createApiResponse(true, existingIncomeCategory, "edited...", 200))
+	}
+	res.status(400).json(createApiResponse(false,null,"Income Category name was unchanged",400))
 }
 
 exports.deleteIncomeCategory = async (req, res) => {
