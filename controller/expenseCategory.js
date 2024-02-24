@@ -2,7 +2,7 @@ const createApiResponse = require('../helper/createApiResponse');
 const { ExpenseCategory } = require("../model/ExpenseCategory");
 const { Expenses } = require('../model/Expenses');
 
-exports.	createExpenseCategory = async (req, res) => {
+exports.createExpenseCategory = async (req, res) => {
 	const name = req.body.name;
 	const userId = req.user.id;
 
@@ -18,20 +18,29 @@ exports.	createExpenseCategory = async (req, res) => {
 }
 
 exports.getExpenseCategory = async (req, res) => {
-	const userId = req.user.id;
-	const expenseCategoryId = req.body.expenseCategoryId;
+    const userId = req.user.id;
+    const expenseCategoryId = req.body.expenseCategoryId;
 
-	if (expenseCategoryId) {
-		const expense = await ExpenseCategory.findOne({ _id: expenseCategoryId });
+	 const expense = await ExpenseCategory.findOne({ _id: expenseCategoryId });
 
-		if (!expense) {
-			return res.json(createApiResponse(false, null, "Expense not found for the given expenseCategoryId", 400))
-		}
-		return res.json(createApiResponse(true, expense, "", 200))
-	}
-
-	const categories = await ExpenseCategory.find({ userId });
-	res.status(200).json(createApiResponse(true, categories, "", 200))
+	 if (!expense) {
+		 return res.json(createApiResponse(false, null, "Expense not found for the given expenseCategoryId", 400));
+	 }
+	
+	 const expensesForCategory = await Expenses.find({ expenseCategoryId });
+ 
+	 const totalExpense = expensesForCategory.reduce((total, expense) => total + expense.expenseAmount, 0);
+	 
+	 const response = {
+		 _id: expense._id,
+		 userId: expense.userId,
+		 name: expense.name,
+		 expenseCategoryId: expense._id, 
+		 totalExpense: totalExpense,
+		 __v: expense.__v 
+	 };
+ 
+	 return res.json(createApiResponse(true, response, "", 200));
 }
 
 exports.editExpenseCategory = async (req, res) => {
