@@ -45,6 +45,7 @@ exports.getExpenseCategory = async (req, res) => {
 
 exports.editExpenseCategory = async (req, res) => {
 	const { expenseCategoryId, name } = req.body;
+	const userId = req.user.id;
 
 	const existingExpenseCategory = await ExpenseCategory.findById(expenseCategoryId);
    
@@ -52,15 +53,20 @@ exports.editExpenseCategory = async (req, res) => {
 		return res.json(createApiResponse(false, null, "Expense category not found.", 400))
 	}
 
-	const checkExistingName = await ExpenseCategory.findOne({name})
-    if(!checkExistingName){	
-	  existingExpenseCategory.name = name;
-	  await existingExpenseCategory.save();
-
-	  return res.status(200).json(createApiResponse(true, existingExpenseCategory, "edited...", 200))
+	if(existingExpenseCategory.name === name){
+		return res.status(200).json(createApiResponse(false, null, "Please choose a different name.", 400))
 	}
-	res.status(400).json(createApiResponse(false,null,"Expense Category name was unchanged",400))
 
+	const isExistingCategory = await ExpenseCategory.findOne({userId, name })
+	
+	if(isExistingCategory){
+	  return res.status(200).json(createApiResponse(false, null, "Entered name matches existing category. Please choose a different name.", 400))
+	}
+
+	existingExpenseCategory.name = name;
+	await existingExpenseCategory.save();
+
+	return res.status(200).json(createApiResponse(true, existingExpenseCategory, "edited...", 200))
 }
 
 exports.deleteExpenseCategory = async (req, res) => {

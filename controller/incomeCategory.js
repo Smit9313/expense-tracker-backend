@@ -36,6 +36,7 @@ exports.getIncomeCategory = async (req, res) => {
 
 exports.editIncomeCategory = async (req, res) => {
 	const { incomeCategoryId, name } = req.body;
+	const userId = req.user.id;
 
 	const existingIncomeCategory = await IncomeCategory.findById(incomeCategoryId);
 
@@ -43,15 +44,20 @@ exports.editIncomeCategory = async (req, res) => {
 		return res.json(createApiResponse(false, null, "Income category not found.", 400))
 	}
 
-
-	const checkexistingIncomeCategory = await IncomeCategory.findOne({name})
-    if(!checkexistingIncomeCategory){	
-		existingIncomeCategory.name = name;
-		await existingIncomeCategory.save();
-
-		return res.status(200).json(createApiResponse(true, existingIncomeCategory, "edited...", 200))
+	if (existingIncomeCategory.name === name) {
+		return res.status(200).json(createApiResponse(false, null, "Please choose a different name.", 400))
 	}
-	res.status(400).json(createApiResponse(false,null,"Income Category name was unchanged",400))
+
+	const isExistingCategory = await IncomeCategory.findOne({ userId, name })
+
+	if (isExistingCategory) {
+		return res.status(200).json(createApiResponse(false, null, "Entered name matches existing category. Please choose a different name.", 400))
+	}
+
+	existingIncomeCategory.name = name;
+	await existingIncomeCategory.save();
+
+	return res.status(200).json(createApiResponse(true, existingIncomeCategory, "edited...", 200))
 }
 
 exports.deleteIncomeCategory = async (req, res) => {
