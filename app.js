@@ -10,6 +10,7 @@ const expenseCategoryRoutes = require("./routes/expenseCategory");
 const incomeCategoryRoutes = require("./routes/incomeCategory");
 const expenses = require("./routes/expenses")
 const incomes = require("./routes/incomes")
+const totalUserData = require('./routes/totalUserData')
 
 const app = express();
 
@@ -28,7 +29,7 @@ app.use("/expenseCategory", requireSignIn, expenseCategoryRoutes)
 app.use("/incomeCategory", requireSignIn, incomeCategoryRoutes)
 app.use("/expense", requireSignIn, expenses)
 app.use("/income", requireSignIn, incomes)
-
+app.use('/total', requireSignIn, totalUserData)
 
 app.use(function (err, req, res, next) {
   const status = err.statusCode || 400

@@ -11,7 +11,7 @@ exports.createExpenseCategory = async (req, res) => {
 	if (existingCategory) {
 		return res.json(createApiResponse(false, null, "Category name already exists. Please choose a different name.", 400))
 	}
-
+	
 	const newExpenseCategory = await ExpenseCategory.create({ userId, name });
 
 	res.json(createApiResponse(true, newExpenseCategory, "created...", 201))
