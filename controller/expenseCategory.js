@@ -19,19 +19,14 @@ exports.createExpenseCategory = async (req, res) => {
 
 exports.getExpenseCategory = async (req, res) => {
     const userId = req.user.id;
-    const expenseCategoryId = req.body.expenseCategoryId;
+    const expenseCategoryId = req.params.id;
 
     if (expenseCategoryId) {
         const expense = await ExpenseCategory.findOne({ _id: expenseCategoryId });
         if (!expense) {
             return res.json(createApiResponse(false, null, "Expense not found for the given expenseCategoryId", 400));
         }
-
-        const expensesForCategory = await Expenses.find({ userId: userId, expenseCategoryId: expenseCategoryId });
-
-        const totalExpense = expensesForCategory.reduce((total, expense) => total + expense.expenseAmount, 0);
-
-        return res.json(createApiResponse(true, { ...expense.toJSON(), totalExpense }, "", 200));
+        return res.json(createApiResponse(true, expense, "", 200));
     }
 
     const categories = await ExpenseCategory.find({ userId });

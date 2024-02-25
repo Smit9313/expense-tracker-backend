@@ -19,7 +19,7 @@ exports.createIncomeCategory = async (req, res) => {
 
 exports.getIncomeCategory = async (req, res) => {
 	const userId = req.user.id;
-	const incomeCategoryId = req.body.incomeCategoryId;
+	const incomeCategoryId = req.params.id;
 
 	if (incomeCategoryId) {
 		const income = await IncomeCategory.findOne({ _id: incomeCategoryId });
@@ -31,7 +31,25 @@ exports.getIncomeCategory = async (req, res) => {
 	}
 
 	const categories = await IncomeCategory.find({ userId });
-	res.status(200).json(createApiResponse(true, categories, "", 200))
+
+    const categoryIds = categories.map(category => category._id);
+
+    const totalIncomesMap = {};
+
+    for (const categoryId of categoryIds) {
+        const incomeForCategory = await Incomes.find({ userId: userId, incomeCategoryId: categoryId });
+
+        const totalIncome = incomeForCategory.reduce((total, income) => total + income.incomeAmount, 0);
+
+        totalIncomesMap[categoryId] = totalIncome;
+    }
+
+    const categoriesWithTotalIncomes = categories.map(category => ({
+        ...category.toJSON(),
+        totalIncome: totalIncomesMap[category._id] || 0 
+    }));
+
+    res.status(200).json(createApiResponse(true, categoriesWithTotalIncomes, "", 200));
 }
 
 exports.editIncomeCategory = async (req, res) => {
