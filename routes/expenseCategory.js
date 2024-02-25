@@ -7,7 +7,7 @@ const router = express.Router();
 
 router.get("/getExpenseCategory/:id?", asyncRouteHandler(getExpenseCategory))
 router.post('/createExpenseCategory', asyncRouteHandler(createExpenseCategory))
-router.post('/editExpenseCategory', asyncRouteHandler(editExpenseCategory))
-router.post('/deleteExpenseCategory', asyncRouteHandler(deleteExpenseCategory))
+router.patch('/editExpenseCategory/:id?', asyncRouteHandler(editExpenseCategory))
+router.delete('/deleteExpenseCategory/:id?', asyncRouteHandler(deleteExpenseCategory))
 
 module.exports = router;

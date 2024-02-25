@@ -1,6 +1,6 @@
 const express = require("express");
 
-const { totalTransactions } = require('../controller/user')
+const { totalTransactions } = require('../controller/totalUserData')
 const asyncRouteHandler = require("../helper/asyncRouteHandler");
 
 const router = express.Router();

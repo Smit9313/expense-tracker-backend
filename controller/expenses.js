@@ -26,8 +26,7 @@ exports.createExpense = async (req, res) => {
 
 exports.getExpenses = async (req, res) => {
 	const userId = req.user.id
-	const expenseId = req.body.expenseId;
-
+	const expenseId = req.params.id;
 
 	if (expenseId) {
 		const expense = await Expenses.findOne({ _id: expenseId });
@@ -45,8 +44,8 @@ exports.getExpenses = async (req, res) => {
 };
 
 exports.editExpense = async (req, res) => {
-	const { expenseId, expenseCategoryId, expenseDetails, expenseAmount, expenseDate } = req.body;
-
+	const { expenseCategoryId, expenseDetails, expenseAmount, expenseDate } = req.body;
+    const expenseId = req.params.id
 
 	const existingExpense = await Expenses.findById(expenseId);
 	if (!existingExpense) {
@@ -64,7 +63,7 @@ exports.editExpense = async (req, res) => {
 };
 
 exports.deleteExpense = async (req, res) => {
-	const { expenseId } = req.body;
+	const expenseId = req.params.id;
 
 	const existingExpense = await Expenses.findById(expenseId);
 	if (!existingExpense) {

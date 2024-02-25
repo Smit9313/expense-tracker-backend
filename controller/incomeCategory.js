@@ -53,7 +53,8 @@ exports.getIncomeCategory = async (req, res) => {
 }
 
 exports.editIncomeCategory = async (req, res) => {
-	const { incomeCategoryId, name } = req.body;
+	const { name } = req.body;
+	const incomeCategoryId = req.params.id;
 	const userId = req.user.id;
 
 	const existingIncomeCategory = await IncomeCategory.findById(incomeCategoryId);
@@ -80,7 +81,7 @@ exports.editIncomeCategory = async (req, res) => {
 
 exports.deleteIncomeCategory = async (req, res) => {
 	const userId = req.user.id;
-	const { incomeCategoryId } = req.body;
+	const incomeCategoryId  = req.params.id;
 
 	const existingIncomeCategory = await IncomeCategory.findById(incomeCategoryId);
 

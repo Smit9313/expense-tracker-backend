@@ -26,7 +26,7 @@ exports.createIncome = async (req, res) => {
 
 exports.getIncomes = async (req, res) => {
 	const userId = req.user.id
-	const incomeId = req.body.incomeId;
+	const incomeId = req.params.id;
 
 	if (incomeId) {
 		const income = await Incomes.findOne({ _id: incomeId });
@@ -44,7 +44,8 @@ exports.getIncomes = async (req, res) => {
 };
 
 exports.editIncome = async (req, res) => {
-	const { incomeId, incomeCategoryId, incomeDetails, incomeAmount, incomeDate } = req.body;
+	const incomeId = req.params.id
+	const {  incomeCategoryId, incomeDetails, incomeAmount, incomeDate } = req.body;
 
 	const existingIncome = await Incomes.findById(incomeId);
 	if (!existingIncome) {
@@ -62,7 +63,7 @@ exports.editIncome = async (req, res) => {
 };
 
 exports.deleteIncome = async (req, res) => {
-	const { incomeId } = req.body;
+	const  incomeId  = req.params.id;
 
 	const existingIncome = await Incomes.findById(incomeId);
 	if (!existingIncome) {

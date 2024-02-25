@@ -6,9 +6,9 @@ const { getIncomes, createIncome, editIncome, deleteIncome } = require('../contr
 
 const router = express.Router();
 
-router.post("/getIncomes", asyncRouteHandler(getIncomes))
+router.get("/getIncomes/:id?", asyncRouteHandler(getIncomes))
 router.post("/createIncome", asyncRouteHandler(createIncome))
-router.post("/editIncome", asyncRouteHandler(editIncome))
-router.post("/deleteIncome", asyncRouteHandler(deleteIncome))
+router.patch("/editIncome/:id?", asyncRouteHandler(editIncome))
+router.delete("/deleteIncome/:id?", asyncRouteHandler(deleteIncome))
 
 module.exports = router;

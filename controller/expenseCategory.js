@@ -52,7 +52,8 @@ exports.getExpenseCategory = async (req, res) => {
 };
 
 exports.editExpenseCategory = async (req, res) => {
-	const { expenseCategoryId, name } = req.body;
+	const { name } = req.body;
+	const expenseCategoryId = req.params.id
 
 	const existingExpenseCategory = await ExpenseCategory.findById(expenseCategoryId);
    
@@ -73,7 +74,7 @@ exports.editExpenseCategory = async (req, res) => {
 
 exports.deleteExpenseCategory = async (req, res) => {
 	const userId = req.user.id;
-	const { expenseCategoryId } = req.body;
+	const expenseCategoryId  = req.params.id;
 
 	const existingExpenseCategory = await ExpenseCategory.findById(expenseCategoryId);
 

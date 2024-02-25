@@ -7,7 +7,7 @@ const router = express.Router();
 
 router.get('/getIncomeCategory/:id?', asyncRouteHandler(getIncomeCategory))
 router.post('/createIncomeCategory', asyncRouteHandler(createIncomeCategory))
-router.post('/editIncomeCategory', asyncRouteHandler(editIncomeCategory))
-router.post('/deleteIncomeCategory', asyncRouteHandler(deleteIncomeCategory))
+router.patch('/editIncomeCategory/:id?', asyncRouteHandler(editIncomeCategory))
+router.delete('/deleteIncomeCategory/:id?', asyncRouteHandler(deleteIncomeCategory))
 
 module.exports = router;

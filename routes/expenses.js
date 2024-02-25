@@ -5,9 +5,9 @@ const { createExpense, getExpenses, editExpense, deleteExpense } = require('../c
 
 const router = express.Router();
 
-router.post("/getExpenses", asyncRouteHandler(getExpenses))
+router.get("/getExpenses/:id?", asyncRouteHandler(getExpenses))
 router.post("/createExpense", asyncRouteHandler(createExpense))
-router.post("/editExpense", asyncRouteHandler(editExpense))
-router.post("/deleteExpense", asyncRouteHandler(deleteExpense))
+router.patch("/editExpense/:id?", asyncRouteHandler(editExpense))
+router.delete("/deleteExpense/:id?", asyncRouteHandler(deleteExpense))
 
 module.exports = router;
