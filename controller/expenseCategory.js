@@ -21,31 +21,43 @@ exports.getExpenseCategory = async (req, res) => {
     const userId = req.user.id;
     const expenseCategoryId = req.body.expenseCategoryId;
 
-	 const expense = await ExpenseCategory.findOne({ _id: expenseCategoryId });
+    if (expenseCategoryId) {
+        const expense = await ExpenseCategory.findOne({ _id: expenseCategoryId });
+        if (!expense) {
+            return res.json(createApiResponse(false, null, "Expense not found for the given expenseCategoryId", 400));
+        }
 
-	 if (!expense) {
-		 return res.json(createApiResponse(false, null, "Expense not found for the given expenseCategoryId", 400));
-	 }
-	
-	 const expensesForCategory = await Expenses.find({ expenseCategoryId });
- 
-	 const totalExpense = expensesForCategory.reduce((total, expense) => total + expense.expenseAmount, 0);
-	 
-	 const response = {
-		 _id: expense._id,
-		 userId: expense.userId,
-		 name: expense.name,
-		 expenseCategoryId: expense._id, 
-		 totalExpense: totalExpense,
-		 __v: expense.__v 
-	 };
- 
-	 return res.json(createApiResponse(true, response, "", 200));
-}
+        const expensesForCategory = await Expenses.find({ userId: userId, expenseCategoryId: expenseCategoryId });
+
+        const totalExpense = expensesForCategory.reduce((total, expense) => total + expense.expenseAmount, 0);
+
+        return res.json(createApiResponse(true, { ...expense.toJSON(), totalExpense }, "", 200));
+    }
+
+    const categories = await ExpenseCategory.find({ userId });
+
+    const categoryIds = categories.map(category => category._id);
+
+    const totalExpensesMap = {};
+
+    for (const categoryId of categoryIds) {
+        const expensesForCategory = await Expenses.find({ userId: userId, expenseCategoryId: categoryId });
+
+        const totalExpense = expensesForCategory.reduce((total, expense) => total + expense.expenseAmount, 0);
+
+        totalExpensesMap[categoryId] = totalExpense;
+    }
+
+    const categoriesWithTotalExpenses = categories.map(category => ({
+        ...category.toJSON(),
+        totalExpense: totalExpensesMap[category._id] || 0 
+    }));
+
+    res.status(200).json(createApiResponse(true, categoriesWithTotalExpenses, "", 200));
+};
 
 exports.editExpenseCategory = async (req, res) => {
 	const { expenseCategoryId, name } = req.body;
-	const userId = req.user.id;
 
 	const existingExpenseCategory = await ExpenseCategory.findById(expenseCategoryId);
    
@@ -53,20 +65,15 @@ exports.editExpenseCategory = async (req, res) => {
 		return res.json(createApiResponse(false, null, "Expense category not found.", 400))
 	}
 
-	if(existingExpenseCategory.name === name){
-		return res.status(200).json(createApiResponse(false, null, "Please choose a different name.", 400))
+	const checkExistingName = await ExpenseCategory.findOne({name})
+    if(!checkExistingName){	
+	  existingExpenseCategory.name = name;
+	  await existingExpenseCategory.save();
+
+	  return res.status(200).json(createApiResponse(true, existingExpenseCategory, "edited...", 200))
 	}
+	res.status(400).json(createApiResponse(false,null,"Expense Category name was unchanged",400))
 
-	const isExistingCategory = await ExpenseCategory.findOne({userId, name })
-	
-	if(isExistingCategory){
-	  return res.status(200).json(createApiResponse(false, null, "Entered name matches existing category. Please choose a different name.", 400))
-	}
-
-	existingExpenseCategory.name = name;
-	await existingExpenseCategory.save();
-
-	return res.status(200).json(createApiResponse(true, existingExpenseCategory, "edited...", 200))
 }
 
 exports.deleteExpenseCategory = async (req, res) => {
