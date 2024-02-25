@@ -10,7 +10,7 @@ exports.register = async (req, res) => {
   const existingUser = await User.findOne({ email });
 
   if (existingUser) {
-    return res.json(createApiResponse(false, null, "Email already exists", 400))
+    return res.json(createApiResponse(false, null, "Email already exists", 409))
   }
 
   const hashedPassword = await bcrypt.hash(password, 10);
@@ -18,7 +18,7 @@ exports.register = async (req, res) => {
   const newUser = new User({ username, email, password: hashedPassword });
   await newUser.save();
 
-  res.status(201).json(createApiResponse(true, newUser, "User registered successfully", 200));
+  res.status(201).json(createApiResponse(true, newUser, "User registered successfully", 201));
 };
 
 exports.login = async (req, res) => {
@@ -27,13 +27,13 @@ exports.login = async (req, res) => {
     const user = await User.findOne({ email });
 
     if (!user) {
-      return res.json(createApiResponse(false, null, "User not found.", 400))
+      return res.json(createApiResponse(false, null, "User not found.", 404))
     }
 
     const passwordMatch = await bcrypt.compare(password, user.password);
 
     if (!passwordMatch) {
-      return res.json(createApiResponse(false, null, "Invalid credentials.", 400))
+      return res.json(createApiResponse(false, null, "Invalid credentials.", 401))
     }
 
     const token = jwt.sign({ username: user.username, id: user.id }, SECRET, {

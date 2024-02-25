@@ -16,5 +16,5 @@ exports.totalTransactions = async (req,res) => {
             totalExpense: totalExpense,
             totalIncome: totalIncome
         };
-        res.json(createApiResponse( true,totals,"Total expenses and incomes fetched successfully"));
+        res.json(createApiResponse( true,totals,"Total expenses and incomes fetched successfully",200));
 } 

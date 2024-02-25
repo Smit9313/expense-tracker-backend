@@ -9,7 +9,7 @@ exports.createExpenseCategory = async (req, res) => {
 	const existingCategory = await ExpenseCategory.findOne({ name, userId, });
 
 	if (existingCategory) {
-		return res.json(createApiResponse(false, null, "Category name already exists. Please choose a different name.", 400))
+		return res.json(createApiResponse(false, null, "Category name already exists. Please choose a different name.", 404))
 	}
 	
 	const newExpenseCategory = await ExpenseCategory.create({ userId, name });
@@ -58,17 +58,23 @@ exports.editExpenseCategory = async (req, res) => {
 	const existingExpenseCategory = await ExpenseCategory.findById(expenseCategoryId);
    
 	if (!existingExpenseCategory) {
-		return res.json(createApiResponse(false, null, "Expense category not found.", 400))
+		return res.json(createApiResponse(false, null, "Expense category not found.", 404))
+	}
+
+	if (existingExpenseCategory.name === name) {
+		return res.status(200).json(createApiResponse(false, null, "Please choose a different name.", 409))
 	}
 
 	const checkExistingName = await ExpenseCategory.findOne({name})
+
     if(!checkExistingName){	
 	  existingExpenseCategory.name = name;
 	  await existingExpenseCategory.save();
 
 	  return res.status(200).json(createApiResponse(true, existingExpenseCategory, "edited...", 200))
 	}
-	res.status(400).json(createApiResponse(false,null,"Expense Category name was unchanged",400))
+
+	res.json(createApiResponse(false,null,"Entered name matches existing category. Please choose a different name.",409))
 
 }
 
@@ -79,13 +85,13 @@ exports.deleteExpenseCategory = async (req, res) => {
 	const existingExpenseCategory = await ExpenseCategory.findById(expenseCategoryId);
 
 	if (!existingExpenseCategory) {
-		return res.json(createApiResponse(false, null, "Expense category not found.", 400))
+		return res.json(createApiResponse(false, null, "Expense category not found.", 404))
 	}
 
 	const existingExpense = await Expenses.find({userId, expenseCategoryId})
 
 	if(existingExpense && existingExpense.length > 0){
-		return res.json(createApiResponse(false, null, 'Cannot delete. Associated expense exist.', 400));
+		return res.json(createApiResponse(false, null, 'Cannot delete. Associated expense exist.', 403));
 	}
 
 	await ExpenseCategory.deleteOne({ _id: expenseCategoryId });

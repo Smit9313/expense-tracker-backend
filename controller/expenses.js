@@ -10,7 +10,7 @@ exports.createExpense = async (req, res) => {
 	const existingUser = await User.findById(userId);
 	const existingCategory = await ExpenseCategory.findById(expenseCategoryId);
 	if (!existingUser || !existingCategory) {
-		return res.json(createApiResponse(false, [], "User or Expense Category not found", 400))
+		return res.json(createApiResponse(false, [], "User or Expense Category not found", 404))
 	}
 
 	const newExpense = await Expenses.create({
@@ -32,7 +32,7 @@ exports.getExpenses = async (req, res) => {
 		const expense = await Expenses.findOne({ _id: expenseId });
 
 		if (!expense) {
-			return res.json(createApiResponse(false, [], "Expense not found for the given expenseId", 400))
+			return res.json(createApiResponse(false, [], "Expense not found for the given expenseId", 404))
 		}
 
 		return res.json(createApiResponse(true, expense, "", 200))
@@ -49,7 +49,7 @@ exports.editExpense = async (req, res) => {
 
 	const existingExpense = await Expenses.findById(expenseId);
 	if (!existingExpense) {
-		return res.json(createApiResponse(false, [], "Expense not found", 400))
+		return res.json(createApiResponse(false, [], "Expense not found", 404))
 	}
 
 	existingExpense.expenseCategoryId = expenseCategoryId;
@@ -59,7 +59,7 @@ exports.editExpense = async (req, res) => {
 
 	await existingExpense.save();
 
-	res.status(200).json(createApiResponse(true, existingExpense, "edited...", 200))
+	res.status(200).json(createApiResponse(true, existingExpense, "edited...", 201))
 };
 
 exports.deleteExpense = async (req, res) => {
@@ -67,10 +67,10 @@ exports.deleteExpense = async (req, res) => {
 
 	const existingExpense = await Expenses.findById(expenseId);
 	if (!existingExpense) {
-		return res.json(createApiResponse(false, [], "Expense not found", 400))
+		return res.json(createApiResponse(false, [], "Expense not found", 404))
 	}
 
 	await Expenses.deleteOne({ _id: expenseId });
 
-	res.json(createApiResponse(true, [], "deleted...", 200))
+	res.json(createApiResponse(true, [], "deleted...", 204))
 };

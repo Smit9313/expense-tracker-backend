@@ -10,7 +10,7 @@ exports.createIncome = async (req, res) => {
 	const existingUser = await User.findById(userId);
 	const existingCategory = await IncomeCategory.findById(incomeCategoryId);
 	if (!existingUser || !existingCategory) {
-		return res.json(createApiResponse(false, [], "User or Income Category not found", 400))
+		return res.json(createApiResponse(false, [], "User or Income Category not found", 404))
 	}
 
 	const newIncome = await Incomes.create({
@@ -32,10 +32,10 @@ exports.getIncomes = async (req, res) => {
 		const income = await Incomes.findOne({ _id: incomeId });
 
 		if (!income) {
-			return res.json(createApiResponse(false, [], "Income not found for the given incomeId", 201))
+			return res.json(createApiResponse(false, [], "Income not found for the given incomeId", 404))
 		}
 
-		return res.json(createApiResponse(true, income, "", 200))
+		return res.json(createApiResponse(true, income, "Income Found Successfully", 200))
 	}
 
 	const incomes = await Incomes.find({ userId }).populate('incomeCategoryId', 'name');
@@ -49,7 +49,7 @@ exports.editIncome = async (req, res) => {
 
 	const existingIncome = await Incomes.findById(incomeId);
 	if (!existingIncome) {
-		return res.json(createApiResponse(false, [], "Income not found", 400))
+		return res.json(createApiResponse(false, [], "Income not found", 404))
 	}
 
 	existingIncome.incomeCategoryId = incomeCategoryId;
@@ -59,7 +59,7 @@ exports.editIncome = async (req, res) => {
 
 	await existingIncome.save();
 
-	res.status(200).json(createApiResponse(true, existingIncome, "edited...", 200))
+	res.status(200).json(createApiResponse(true, existingIncome, "edited...", 201))
 };
 
 exports.deleteIncome = async (req, res) => {
@@ -67,10 +67,10 @@ exports.deleteIncome = async (req, res) => {
 
 	const existingIncome = await Incomes.findById(incomeId);
 	if (!existingIncome) {
-		return res.json(createApiResponse(false, [], "Income not found", 400))
+		return res.json(createApiResponse(false, [], "Income not found", 404))
 	}
 
 	await Incomes.deleteOne({ _id: incomeId });
 
-	res.json(createApiResponse(true, [], "deleted...", 200))
+	res.json(createApiResponse(true, [], "deleted...", 204))
 };

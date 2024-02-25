@@ -9,7 +9,7 @@ exports.createIncomeCategory = async (req, res) => {
 	const existingCategory = await IncomeCategory.findOne({ name, userId, });
 
 	if (existingCategory) {
-		return res.json(createApiResponse(false, null, "Category name already exists. Please choose a different name.", 400))
+		return res.json(createApiResponse(false, null, "Category name already exists. Please choose a different name.", 404))
 	}
 
 	const newIncomeCategory = await IncomeCategory.create({ userId, name, });
@@ -60,23 +60,23 @@ exports.editIncomeCategory = async (req, res) => {
 	const existingIncomeCategory = await IncomeCategory.findById(incomeCategoryId);
 
 	if (!existingIncomeCategory) {
-		return res.json(createApiResponse(false, null, "Income category not found.", 400))
+		return res.json(createApiResponse(false, null, "Income category not found.", 404))
 	}
 
 	if (existingIncomeCategory.name === name) {
-		return res.status(200).json(createApiResponse(false, null, "Please choose a different name.", 400))
+		return res.status(200).json(createApiResponse(false, null, "Please choose a different name.", 409))
 	}
 
 	const isExistingCategory = await IncomeCategory.findOne({ userId, name })
 
 	if (isExistingCategory) {
-		return res.status(200).json(createApiResponse(false, null, "Entered name matches existing category. Please choose a different name.", 400))
+		return res.status(200).json(createApiResponse(false, null, "Entered name matches existing category. Please choose a different name.", 409))
 	}
 
 	existingIncomeCategory.name = name;
 	await existingIncomeCategory.save();
 
-	return res.status(200).json(createApiResponse(true, existingIncomeCategory, "edited...", 200))
+	return res.json(createApiResponse(true, existingIncomeCategory, "edited...", 200))
 }
 
 exports.deleteIncomeCategory = async (req, res) => {
@@ -86,13 +86,13 @@ exports.deleteIncomeCategory = async (req, res) => {
 	const existingIncomeCategory = await IncomeCategory.findById(incomeCategoryId);
 
 	if (!existingIncomeCategory) {
-		return res.json(createApiResponse(false, null, "Income category not found.", 400))
+		return res.json(createApiResponse(false, null, "Income category not found.", 404))
 	}
 
 	const existingIncome = await Incomes.find({ userId, incomeCategoryId })
 
 	if (existingIncome && existingIncome.length > 0) {
-		return res.json(createApiResponse(false, null, 'Cannot delete. Associated income exist.', 400))
+		return res.json(createApiResponse(false, null, 'Cannot delete. Associated income exist.', 403))
 	}
 
 	await IncomeCategory.deleteOne({ _id: incomeCategoryId });
