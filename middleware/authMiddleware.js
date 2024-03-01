@@ -15,6 +15,7 @@ exports.requireSignIn = async (req, res, next) => {
   } catch (error) {
     console.log(error)
     res.json(error)
+    res.status(401).json(createApiResponse(false,error, "UnAuthorized",401))
 	// console.log("hello")
   }
 }
