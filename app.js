@@ -13,6 +13,7 @@ const incomes = require("./routes/incomes")
 const totalUserData = require('./routes/totalUserData')
 
 const app = express();
+console.log("Swagat nahi karoge hamara !!!!!");
 
 app.use(cors({ origin: "http://localhost:5173", credentials: true }));
 app.use(express.json());
