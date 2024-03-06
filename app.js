@@ -1,6 +1,8 @@
 const express = require("express");
 const mongoose = require("mongoose");
 const cors = require('cors');
+const swaggerUI = require("swagger-ui-express");
+const swaggerSpec = require("./swagger");
 
 const { requireSignIn } = require('./middleware/authMiddleware');
 const { PORT, MONGO_URL } = require('./helper/config');
@@ -25,6 +27,9 @@ async function main() {
   console.log("Database connected...");
 }
 
+// Serve Swagger documentation
+app.use("/api-docs", swaggerUI.serve, swaggerUI.setup(swaggerSpec));
+
 app.use("/user", userRoutes);
 app.use("/expenseCategory", requireSignIn, expenseCategoryRoutes)
 app.use("/incomeCategory", requireSignIn, incomeCategoryRoutes)
@@ -40,8 +45,8 @@ app.use(function (err, req, res, next) {
     message,
     data
   })
-})  
+})
 
 app.listen(PORT, () => {
-	console.log(`Server is running on port ${PORT}.`);
+  console.log(`Server is running on port ${PORT}.`);
 });
