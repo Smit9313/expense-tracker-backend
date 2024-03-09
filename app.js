@@ -13,6 +13,12 @@ const expenses = require("./routes/expenses")
 const incomes = require("./routes/incomes")
 const totalUserData = require('./routes/totalUserData');
 
+//googleauth
+const passport = require('passport')
+const cookieSession = require('cookie-session')
+const passportStrategy = require('./middleware/passport')
+const passportRoutes = require('./routes/passportRoutes')
+
 const app = express();
 
 app.use(cors({ origin: "http://localhost:5173", credentials: true }));
@@ -32,6 +38,19 @@ app.use("/incomeCategory", requireSignIn, incomeCategoryRoutes)
 app.use("/expense", requireSignIn, expenses)
 app.use("/income", requireSignIn, incomes)
 app.use('/total', requireSignIn, totalUserData)
+
+app.use(
+  cookieSession({
+    name:"session",
+    keys:["somesessionkey"],
+    maxAge:24*60*60*100,
+  })
+)
+app.use(passport.initialize())
+app.use(passport.session())
+
+//only for passport verification or else it will be frontend url
+app.use('/auth',passportRoutes)
 
 app.use(function (err, req, res, next) {
   const status = err.statusCode || 400

@@ -3,6 +3,7 @@ const createApiResponse = require('../helper/createApiResponse')
 // const { JWT_SECRET } = process.env
 // const userModel = require('../models/user')
 // const db = require('../models/index')
+const {SECRET} = require('../helper/config')
 
 // Protected  routes
 exports.requireSignIn = async (req, res, next) => {
@@ -10,7 +11,7 @@ exports.requireSignIn = async (req, res, next) => {
     if (req.headers.authorization) {
       const decode = JWT.verify(
         req.headers.authorization,
-        "ABC"
+        SECRET
       )
       req.user = decode
       next()
