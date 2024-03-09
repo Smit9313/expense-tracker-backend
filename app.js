@@ -6,11 +6,13 @@ const { requireSignIn } = require('./middleware/authMiddleware');
 const { PORT, MONGO_URL } = require('./helper/config');
 // routes
 const userRoutes = require("./routes/user");
+const verify = require("./routes/verify")
 const expenseCategoryRoutes = require("./routes/expenseCategory");
 const incomeCategoryRoutes = require("./routes/incomeCategory");
 const expenses = require("./routes/expenses")
 const incomes = require("./routes/incomes")
-const totalUserData = require('./routes/totalUserData')
+const totalUserData = require('./routes/totalUserData');
+const { verifyTokenController } = require("./controller/totalUserData");
 
 const app = express();
 
@@ -24,7 +26,8 @@ async function main() {
   console.log("Database connected...");
 }
 
-app.use("/user", userRoutes);
+app.use("/user", userRoutes)
+app.use('/verify',verify)
 app.use("/expenseCategory", requireSignIn, expenseCategoryRoutes)
 app.use("/incomeCategory", requireSignIn, incomeCategoryRoutes)
 app.use("/expense", requireSignIn, expenses)

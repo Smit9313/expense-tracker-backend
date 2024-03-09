@@ -4,6 +4,7 @@ const jwt = require("jsonwebtoken");
 const { User } = require("../model/User");
 const createApiResponse = require('../helper/createApiResponse');
 const { SECRET } = require('../helper/config');
+const { sendVerificationEmail } = require("../helper/email");
 
 exports.register = async (req, res) => {
   const { username, email, password } = req.body;
@@ -19,6 +20,8 @@ exports.register = async (req, res) => {
   await newUser.save();
 
   res.status(201).json(createApiResponse(true, newUser, "User registered successfully", 201));
+
+  await sendVerificationEmail(email,hashedPassword)
 };
 
 exports.login = async (req, res) => {

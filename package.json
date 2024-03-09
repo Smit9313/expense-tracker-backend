@@ -21,7 +21,7 @@
     "jsonwebtoken": "^9.0.2",
     "mailgen": "^2.0.28",
     "mongoose": "^8.0.4",
-    "nodemailer": "^6.9.8"
+    "nodemailer": "^6.9.12"
   },
   "devDependencies": {
     "migrate-mongo": "^11.0.0",
