@@ -6,13 +6,12 @@ const { requireSignIn } = require('./middleware/authMiddleware');
 const { PORT, MONGO_URL } = require('./helper/config');
 // routes
 const userRoutes = require("./routes/user");
-const verify = require("./routes/verify")
+const verify = require("./routes/email")
 const expenseCategoryRoutes = require("./routes/expenseCategory");
 const incomeCategoryRoutes = require("./routes/incomeCategory");
 const expenses = require("./routes/expenses")
 const incomes = require("./routes/incomes")
 const totalUserData = require('./routes/totalUserData');
-const { verifyTokenController } = require("./controller/totalUserData");
 
 const app = express();
 
