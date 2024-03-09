@@ -7,5 +7,5 @@ exports.loginRateLimit = rateLimit({
 	// standardHeaders: true,
 	legacyHeaders: false,
 	// skipSuccessfulRequests: true,
-	message: createApiResponse(false, null,'You can only make 5 requests every hour.')
+	message: createApiResponse(false, null,'You can only make 3 requests every hour.')
 })

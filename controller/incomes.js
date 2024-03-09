@@ -45,7 +45,7 @@ exports.getIncomes = async (req, res) => {
 
 exports.editIncome = async (req, res) => {
 	const incomeId = req.params.id
-	const {  incomeCategoryId, incomeDetails, incomeAmount, incomeDate } = req.body;
+	const { incomeCategoryId, incomeDetails, incomeAmount, incomeDate } = req.body;
 
 	const existingIncome = await Incomes.findById(incomeId);
 	if (!existingIncome) {

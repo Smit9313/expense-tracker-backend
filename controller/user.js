@@ -23,8 +23,6 @@ exports.register = async (req, res) => {
 
 exports.login = async (req, res) => {
     const { email, password } = req.body;
-    console.log(email,"email")
-    console.log(req.body)
 
     const user = await User.findOne({ email });
 
@@ -39,7 +37,7 @@ exports.login = async (req, res) => {
     }
 
     const token = jwt.sign({ username: user.username, id: user.id }, SECRET, {
-      expiresIn: "10h",
+      expiresIn: "48h",
     });
 
     res.json(createApiResponse(true, {token: token}, "login successfully.", 200))

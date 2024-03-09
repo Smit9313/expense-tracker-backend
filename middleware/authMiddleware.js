@@ -7,16 +7,18 @@ const createApiResponse = require('../helper/createApiResponse')
 // Protected  routes
 exports.requireSignIn = async (req, res, next) => {
   try {
-    const decode = JWT.verify(
-      req.headers.authorization,
-      "ABC"
-    )
-    req.user = decode
-    next()
+    if (req.headers.authorization) {
+      const decode = JWT.verify(
+        req.headers.authorization,
+        "ABC"
+      )
+      req.user = decode
+      next()
+    } else {
+      res.status(401).json(createApiResponse(false, [], "UnAuthorized", 401))
+    }
   } catch (error) {
     console.log(error)
-    // res.json(error)
-    res.status(401).json(createApiResponse(false,error, "UnAuthorized",401))
-	// console.log("hello")
+    res.status(401).json(createApiResponse(false, error, "UnAuthorized", 401))
   }
 }
