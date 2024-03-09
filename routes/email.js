@@ -4,6 +4,6 @@ const { verifyTokenController } = require('../controller/email')
 
 const router = express.Router();
 
-router.get('/:email',verifyTokenController)
+router.get('/:token',verifyTokenController)
 
 module.exports = router;

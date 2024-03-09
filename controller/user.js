@@ -1,4 +1,4 @@
-  const bcrypt = require("bcrypt");
+const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 
 const { User } = require("../model/User");
@@ -19,9 +19,13 @@ exports.register = async (req, res) => {
   const newUser = new User({ username, email, password: hashedPassword });
   await newUser.save();
 
+  const token = jwt.sign({ email }, SECRET, {
+    expiresIn: "2h",
+  });
+
   res.status(201).json(createApiResponse(true, newUser, "User registered successfully", 201));
 
-  await sendVerificationEmail(email)
+  await sendVerificationEmail(email,token)
 };
 
 exports.login = async (req, res) => {
