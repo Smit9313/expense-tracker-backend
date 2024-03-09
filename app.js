@@ -1,8 +1,6 @@
 const express = require("express");
 const mongoose = require("mongoose");
 const cors = require('cors');
-const swaggerUI = require("swagger-ui-express");
-const swaggerSpec = require("./swagger");
 
 const { requireSignIn } = require('./middleware/authMiddleware');
 const { PORT, MONGO_URL } = require('./helper/config');
@@ -15,7 +13,6 @@ const incomes = require("./routes/incomes")
 const totalUserData = require('./routes/totalUserData')
 
 const app = express();
-console.log("Swagat nahi karoge hamara !!!!!");
 
 app.use(cors({ origin: "http://localhost:5173", credentials: true }));
 app.use(express.json());
@@ -26,9 +23,6 @@ async function main() {
   await mongoose.connect(MONGO_URL);
   console.log("Database connected...");
 }
-
-// Serve Swagger documentation
-app.use("/api-docs", swaggerUI.serve, swaggerUI.setup(swaggerSpec));
 
 app.use("/user", userRoutes);
 app.use("/expenseCategory", requireSignIn, expenseCategoryRoutes)

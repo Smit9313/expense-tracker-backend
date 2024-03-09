@@ -11,7 +11,7 @@ function overallSchema(schema,req,res,next)  {
 }
 
 exports.createExpenseMiddleware = (req, res, next) => {
-  const schema = Joi.object().keys({
+  const schema = Joi.object({
     expenseCategoryId:Joi.string().required(),
     expenseDetails:Joi.string().required(),
     expenseAmount:Joi.number().required(),
@@ -21,14 +21,14 @@ exports.createExpenseMiddleware = (req, res, next) => {
 };
 
 exports.createExpCategoryMiddleware = (req,res,next)=>{
-  const schema = Joi.object.keys({
+  const schema = Joi.object({
     name: Joi.string().required()
   })
   overallSchema(schema,req,res,next)
 }
 
 exports.createIncomeMiddleware = (req,res,next) => {
-  const schema = Joi.object.keys({
+  const schema = Joi.object({
       incomeCategoryId:Joi.string().required(),
       incomeDetails:Joi.string().required(),
       incomeAmount:Joi.number().required(),

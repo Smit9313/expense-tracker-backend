@@ -1,4 +1,5 @@
 const JWT = require('jsonwebtoken')
+const createApiResponse = require('../helper/createApiResponse')
 // const { JWT_SECRET } = process.env
 // const userModel = require('../models/user')
 // const db = require('../models/index')
@@ -14,7 +15,7 @@ exports.requireSignIn = async (req, res, next) => {
     next()
   } catch (error) {
     console.log(error)
-    res.json(error)
+    // res.json(error)
     res.status(401).json(createApiResponse(false,error, "UnAuthorized",401))
 	// console.log("hello")
   }
