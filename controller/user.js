@@ -33,6 +33,10 @@ exports.login = async (req, res) => {
       return res.json(createApiResponse(false, null, "User not found.", 404))
     }
 
+    if(user.isVerified === "false"){
+      return res.json(createApiResponse(false,null,"Email is not verified",401))
+    }
+
     const passwordMatch = await bcrypt.compare(password, user.password);
 
     if (!passwordMatch) {
