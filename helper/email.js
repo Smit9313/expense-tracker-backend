@@ -1,6 +1,6 @@
 const nodemailer = require('nodemailer') // Import nodemailer library
 
-exports.sendVerificationEmail = async (email, hashPassword) => {
+exports.sendVerificationEmail = async (email) => {
     const transporter = nodemailer.createTransport({
       service: 'Gmail',
       auth: {

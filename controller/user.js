@@ -21,7 +21,7 @@ exports.register = async (req, res) => {
 
   res.status(201).json(createApiResponse(true, newUser, "User registered successfully", 201));
 
-  await sendVerificationEmail(email,hashedPassword)
+  await sendVerificationEmail(email)
 };
 
 exports.login = async (req, res) => {
