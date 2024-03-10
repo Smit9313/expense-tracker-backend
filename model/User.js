@@ -4,8 +4,8 @@ const UserSchema = new mongoose.Schema({
   username: String,
   email: String,
   password: String,
-  isVerified:{
-    type:String,
+  isVerify:{
+    type:Boolean,
     default:false,
   }
 });

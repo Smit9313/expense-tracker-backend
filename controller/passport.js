@@ -15,7 +15,7 @@ exports.SignInUsingGoogle = async ( profile ) => {
 //         status: 409
 //     };
 //  }
-    const newUser = await User.create({username:family_name,email,isVerified:email_verified})
+    // const newUser = await User.create({username:family_name,email,isVerified:email_verified})
 
     // return res.json(createApiResponse(true, newUser, "User registered successfully", 201))
 }
