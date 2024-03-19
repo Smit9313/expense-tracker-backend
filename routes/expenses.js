@@ -6,9 +6,9 @@ const {createExpenseMiddleware} = require('../middleware/validation/validation')
 
 const router = express.Router();
 
-router.get("/getExpenses/:id?", asyncRouteHandler(getExpenses))
-router.post("/createExpense",createExpenseMiddleware, asyncRouteHandler(createExpense))
-router.patch("/editExpense/:id",createExpenseMiddleware, asyncRouteHandler(editExpense))
-router.delete("/deleteExpense/:id", asyncRouteHandler(deleteExpense))
+router.get("/:id?", asyncRouteHandler(getExpenses))
+router.post("/",createExpenseMiddleware, asyncRouteHandler(createExpense))
+router.patch("/:id",createExpenseMiddleware, asyncRouteHandler(editExpense))
+router.delete("/:id", asyncRouteHandler(deleteExpense))
 
 module.exports = router;

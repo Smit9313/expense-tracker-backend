@@ -6,9 +6,9 @@ const { createIncomeMiddleware } = require("../middleware/validation/validation"
 
 const router = express.Router();
 
-router.get("/getIncomes/:id?", asyncRouteHandler(getIncomes))
-router.post("/createIncome",createIncomeMiddleware, asyncRouteHandler(createIncome))
-router.patch("/editIncome/:id",createIncomeMiddleware, asyncRouteHandler(editIncome))
-router.delete("/deleteIncome/:id", asyncRouteHandler(deleteIncome))
+router.get("/:id?", asyncRouteHandler(getIncomes))
+router.post("/",createIncomeMiddleware, asyncRouteHandler(createIncome))
+router.patch("/:id",createIncomeMiddleware, asyncRouteHandler(editIncome))
+router.delete("/:id", asyncRouteHandler(deleteIncome))
 
 module.exports = router;

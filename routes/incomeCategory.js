@@ -6,9 +6,9 @@ const { createExpCategoryMiddleware } = require("../middleware/validation/valida
 
 const router = express.Router();
 
-router.get('/getIncomeCategory/:id?', asyncRouteHandler(getIncomeCategory))
-router.post('/createIncomeCategory',createExpCategoryMiddleware, asyncRouteHandler(createIncomeCategory))
-router.patch('/editIncomeCategory/:id',createExpCategoryMiddleware, asyncRouteHandler(editIncomeCategory))
-router.delete('/deleteIncomeCategory/:id', asyncRouteHandler(deleteIncomeCategory))
+router.get('/:id?', asyncRouteHandler(getIncomeCategory))
+router.post('/',createExpCategoryMiddleware, asyncRouteHandler(createIncomeCategory))
+router.patch('/:id',createExpCategoryMiddleware, asyncRouteHandler(editIncomeCategory))
+router.delete('/:id', asyncRouteHandler(deleteIncomeCategory))
 
 module.exports = router;
