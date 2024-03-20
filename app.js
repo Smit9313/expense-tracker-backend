@@ -12,6 +12,7 @@ const incomeCategoryRoutes = require("./routes/incomeCategory");
 const expenses = require("./routes/expenses")
 const incomes = require("./routes/incomes")
 const totalUserData = require('./routes/totalUserData');
+const notification = require('./routes/notifications');
 
 //googleauth
 const passport = require('passport')
@@ -38,7 +39,7 @@ app.use("/incomeCategory", requireSignIn, incomeCategoryRoutes)
 app.use("/expense", requireSignIn, expenses)
 app.use("/income", requireSignIn, incomes)
 app.use('/total', requireSignIn, totalUserData)
-app.use('/notification', () => {})
+app.use('/notification', requireSignIn, notification)
 
 app.use(
   cookieSession({
