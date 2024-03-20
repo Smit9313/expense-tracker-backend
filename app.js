@@ -38,6 +38,7 @@ app.use("/incomeCategory", requireSignIn, incomeCategoryRoutes)
 app.use("/expense", requireSignIn, expenses)
 app.use("/income", requireSignIn, incomes)
 app.use('/total', requireSignIn, totalUserData)
+app.use('/notification', () => {})
 
 app.use(
   cookieSession({
