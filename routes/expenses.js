@@ -8,7 +8,7 @@ const router = express.Router();
 
 router.get("/:id?", asyncRouteHandler(getExpenses))
 router.post("/",createExpenseMiddleware, asyncRouteHandler(createExpense))
-router.patch("/:id", asyncRouteHandler(editExpense))
+router.patch("/:id", createExpenseMiddleware,asyncRouteHandler(editExpense))
 router.delete("/:id", asyncRouteHandler(deleteExpense))
 
 module.exports = router;

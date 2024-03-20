@@ -54,3 +54,7 @@ exports.login = async (req, res) => {
     res.json(createApiResponse(true, {token: token}, "login successfully.", 200))
 };
 
+exports.user = async(req,res) => {
+  const user = req.user;
+  res.json(createApiResponse( true,user,"Total expenses and incomes fetched successfully",200));
+}
