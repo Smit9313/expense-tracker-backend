@@ -16,7 +16,7 @@ exports.register = async (req, res) => {
 
   const hashedPassword = await bcrypt.hash(password, 10);
 
-  const newUser = new User({ username, email, password: hashedPassword });
+  const newUser = new User({ username, email, password: hashedPassword, isVerify: false });
   await newUser.save();
 
   const token = jwt.sign({ email }, SECRET, {
@@ -25,36 +25,37 @@ exports.register = async (req, res) => {
 
   res.status(201).json(createApiResponse(true, newUser, "User registered successfully", 201));
 
-  await sendVerificationEmail(email,token)
+  await sendVerificationEmail(email, token)
 };
 
 exports.login = async (req, res) => {
-    const { email, password } = req.body;
+  const { email, password } = req.body;
 
-    const user = await User.findOne({ email });
+  const user = await User.findOne({ email });
 
-    if (!user) {
-      return res.json(createApiResponse(false, null, "User not found.", 404))
-    }
+  if (!user) {
+    return res.json(createApiResponse(false, null, "User not found.", 404))
+  }
 
-    if(user.isVerified === "false"){
-      return res.json(createApiResponse(false,null,"Email is not verified",401))
-    }
+  if (user.isVerify === "false") {
+    return res.json(createApiResponse(false, null, "Email is not verified", 401))
+  }
 
-    const passwordMatch = await bcrypt.compare(password, user.password);
+  const passwordMatch = await bcrypt.compare(password, user.password);
 
-    if (!passwordMatch) {
-      return res.json(createApiResponse(false, null, "Invalid credentials.", 401))
-    }
+  if (!passwordMatch) {
+    return res.json(createApiResponse(false, null, "Invalid credentials.", 401))
+  }
 
-    const token = jwt.sign({ username: user.username, id: user.id }, SECRET, {
-      expiresIn: "48h",
-    });
+  const token = jwt.sign({ username: user.username, id: user.id, email: user.email }, SECRET, {
+    expiresIn: "48h",
+  });
 
-    res.json(createApiResponse(true, {token: token}, "login successfully.", 200))
+  res.json(createApiResponse(true, { token: token }, "login successfully.", 200))
 };
 
-exports.user = async(req,res) => {
-  const user = req.user;
-  res.json(createApiResponse( true,user,"Total expenses and incomes fetched successfully",200));
+exports.user = async (req, res) => {
+  const email = req.user.email;
+  const user = await User.findOne({ email }, { password: 0 });
+  res.json(createApiResponse(true, user, "success", 200));
 }

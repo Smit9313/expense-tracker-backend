@@ -19,7 +19,7 @@ router.get('/login/success', async (req, res) => {
             return res.json(createApiResponse(false, null, "Email is not verified", 401))
         }
 
-        const token = jwt.sign({ username: user.username, id: user.id }, SECRET, {
+        const token = jwt.sign({ username: user.username, id: user.id, email: user.email }, SECRET, {
             expiresIn: "48h",
         });
 
