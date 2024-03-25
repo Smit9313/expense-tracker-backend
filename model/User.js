@@ -7,7 +7,8 @@ const UserSchema = new mongoose.Schema({
   isVerify:{
     type:Boolean,
     default:false,
-  }
+  },
+  profilePic: String
 });
 
 exports.User = mongoose.model("User", UserSchema);

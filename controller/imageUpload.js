@@ -2,7 +2,8 @@ const path = require('path');
 
 const { getStorage, ref, uploadBytesResumable, getDownloadURL } = require('firebase/storage')
 const { signInWithEmailAndPassword, createUserWithEmailAndPassword } = require("firebase/auth");
-const { auth } = require('../helper/firebase.config')
+const { auth } = require('../helper/firebase.config');
+const createApiResponse = require('../helper/createApiResponse');
 
 async function uploadImage(file, quantity) {
 	const storageFB = getStorage();
@@ -20,7 +21,6 @@ async function uploadImage(file, quantity) {
 		// Get the download URL
 		const downloadURL = await getDownloadURL(storageRef);
 		return downloadURL;
-	
 	}
 
 	if (quantity === 'multiple') {
@@ -51,11 +51,8 @@ exports.imageUpload = async (req, res) => {
 	}
 	try {
 		const buildImage = await uploadImage(file, 'single');
-		res.send({
-			status: "SUCCESS",
-			imageName: buildImage
-		})
+		return res.json(createApiResponse(true, { imageUrl: buildImage }, "suceess...", 200))
 	} catch (err) {
-		console.log(err);
+		return res.json(createApiResponse(false, null, "Something went wrong. Please try again later.", 401))
 	}
 }

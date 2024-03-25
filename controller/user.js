@@ -7,7 +7,7 @@ const { SECRET } = require('../helper/config');
 const { sendVerificationEmail } = require("../helper/email");
 
 exports.register = async (req, res) => {
-  const { username, email, password } = req.body;
+  const { username, email, password, profilePic } = req.body;
   const existingUser = await User.findOne({ email });
 
   if (existingUser) {
@@ -16,7 +16,7 @@ exports.register = async (req, res) => {
 
   const hashedPassword = await bcrypt.hash(password, 10);
 
-  const newUser = new User({ username, email, password: hashedPassword, isVerify: false });
+  const newUser = new User({ username, email, password: hashedPassword, isVerify: false, profilePic });
   await newUser.save();
 
   const token = jwt.sign({ email }, SECRET, {
@@ -37,7 +37,7 @@ exports.login = async (req, res) => {
     return res.json(createApiResponse(false, null, "User not found.", 404))
   }
 
-  if (user.isVerify === "false") {
+  if (user.isVerify === false) {
     return res.json(createApiResponse(false, null, "Email is not verified", 401))
   }
 
