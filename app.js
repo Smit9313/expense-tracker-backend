@@ -2,6 +2,7 @@ const express = require("express");
 const mongoose = require("mongoose");
 const cors = require('cors');
 const multer = require('multer');
+const path = require('path');
 
 const { requireSignIn } = require('./middleware/authMiddleware');
 const { PORT, MONGO_URL } = require('./helper/config');
@@ -27,6 +28,8 @@ const upload = multer();
 
 app.use(cors({ origin: "http://localhost:5173", credentials: true }));
 app.use(express.json());
+app.set('view engine', 'ejs');
+app.set('views', path.join(__dirname, 'views'));
 
 main().catch((err) => console.log(err));
 
