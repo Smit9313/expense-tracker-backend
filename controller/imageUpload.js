@@ -1,6 +1,6 @@
 const path = require('path');
 
-const { getStorage, ref, uploadBytesResumable } = require('firebase/storage')
+const { getStorage, ref, uploadBytesResumable, getDownloadURL } = require('firebase/storage')
 const { signInWithEmailAndPassword, createUserWithEmailAndPassword } = require("firebase/auth");
 const { auth } = require('../helper/firebase.config')
 
@@ -17,7 +17,10 @@ async function uploadImage(file, quantity) {
 			contentType: file.type,
 		}
 		await uploadBytesResumable(storageRef, file.buffer, metadata);
-		return fileName
+		// Get the download URL
+		const downloadURL = await getDownloadURL(storageRef);
+		return downloadURL;
+	
 	}
 
 	if (quantity === 'multiple') {
@@ -41,19 +44,18 @@ async function uploadImage(file, quantity) {
 
 }
 
-
 exports.imageUpload = async (req, res) => {
 	const file = {
-        type: req.file.mimetype,
-        buffer: req.file.buffer
-    }
-    try {
-        const buildImage = await uploadImage(file, 'single'); 
-        res.send({
-            status: "SUCCESS",
-            imageName: buildImage
-        })
-    } catch(err) {
-        console.log(err);
-    }
+		type: req.file.mimetype,
+		buffer: req.file.buffer
+	}
+	try {
+		const buildImage = await uploadImage(file, 'single');
+		res.send({
+			status: "SUCCESS",
+			imageName: buildImage
+		})
+	} catch (err) {
+		console.log(err);
+	}
 }
