@@ -1,7 +1,7 @@
-	const GoogleStrategy = require("passport-google-oauth20").Strategy;
-	const passport = require("passport");
-	const {GOOGLE_CLIENT_ID,GOOGLE_CLIENT_SECRET} = require('../helper/config');
-	const { SignInUsingGoogle } = require("../controller/passport");
+const GoogleStrategy = require("passport-google-oauth20").Strategy;
+const passport = require("passport");
+const {GOOGLE_CLIENT_ID,GOOGLE_CLIENT_SECRET} = require('../helper/config');
+const { SignInUsingGoogle } = require("../controller/passport");
 
 	passport.use(
 		new GoogleStrategy(
