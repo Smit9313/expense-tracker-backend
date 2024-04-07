@@ -3,6 +3,7 @@ const mongoose = require("mongoose");
 const cors = require('cors');
 const multer = require('multer');
 const path = require('path');
+const xlsx = require('xlsx');
 
 const { requireSignIn } = require('./middleware/authMiddleware');
 const { PORT, MONGO_URL } = require('./helper/config');
@@ -47,6 +48,31 @@ app.use("/income", requireSignIn, incomes)
 app.use('/total', requireSignIn, totalUserData)
 app.use('/notification', requireSignIn, notification)
 app.use('/image-upload', upload.single('image'), imageUploadRoute)
+
+// Example data to be exported to Excel
+const data = [
+  { name: 'John Doe', age: 30, email: 'john.doe@example.com' },
+  { name: 'Jane Smith', age: 25, email: 'jane.smith@example.com' },
+  { name: 'Bob Johnson', age: 35, email: 'bob.johnson@example.com' },
+];
+
+// API endpoint to generate and download the Excel file
+app.get('/download-excel', (req, res) => {
+  // Convert the data to a worksheet
+  const worksheet = xlsx.utils.json_to_sheet(data);
+  const workbook = xlsx.utils.book_new();
+  xlsx.utils.book_append_sheet(workbook, worksheet, 'Sheet1');
+
+  // Generate the Excel file
+  const excelBuffer = xlsx.write(workbook, { bookType: 'xlsx', type: 'buffer' });
+
+  // Set the response headers for file download
+  res.setHeader('Content-Type', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
+  res.setHeader('Content-Disposition', 'attachment; filename=data.xlsx');
+
+  // Send the Excel file to the client
+  res.send(excelBuffer);
+});
 
 app.use(
   cookieSession({
